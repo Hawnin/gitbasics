@@ -1,0 +1,11 @@
+
+git config --list
+git config --global user.name "John Doe"
+git config --global user.email johndoe@example.com
+git config user.name 
+
+//Tells you which config is the value from
+git config --show-origin rerere.autoUpdate
+
+git help <verb>
+git -h <verb>
