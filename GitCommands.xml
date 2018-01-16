@@ -3,9 +3,10 @@ git config --list
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config user.name 
-
-//Tells you which config is the value from
-git config --show-origin rerere.autoUpdate
-
+git config --show-origin rerere.autoUpdate //Tells you which config is the value from
 git help <verb>
 git -h <verb>
+git clone https://github.com/libgit2/libgit2 //clone a repository
+git status
+git status -s  // short version
+git diff //What have you changed but not yet staged? And what have you staged that you are about to commit?
