@@ -12,3 +12,43 @@ git status -s  // short version
 git diff //What have you changed but not yet staged? And what have you staged that you are about to commit?
 git commit -a // with -a git automatically stage your file and you dont have to use git add
 git rm //remove the file from git, it wont be tracked anymore as well, if alread tracked use -f 
+git mv file_from file_to
+git log // to check history, it contains all logs which have been committed
+git commit --amend // If you forgot to add something or redo that commit
+
+//Example for commit amend: Basically its replacing your previous commit
+* git commit -m 'initial commit' 
+* git add forgotten_file 
+* git commit --amend
+//end
+
+git reset HEAD <file> // to unstage a file
+git checkout -- <file> // remove the modifications you made.
+git remote // to see which server configured for you 
+git remote  -v // shows the link where it get pushed and fetched
+git remote add pb https://github.com/paulboone/ticgit // pb will be a string which value is the string
+git remote add <shortname> <url> // add  aremote repository, and a shortname for it for later use.
+
+ git push <remote> <branch> //if you want to share your project upstream
+ git push origin master //to push your project to the origin branch
+ git remote show origin // shows information of a particulare remote
+ git remote rename <from> <to> // to change a short name, it changes the remote names as well
+ git remote remove <name> // to remove a remote branch
+ 
+ git tag // shows the available tags -l for listing
+ git tag -l "v1.8.5*" //for searching
+ git tag -a v1.4 -m "my version 1.4" //this is for 
+ git push origin <tagname> // for sharing tag names remotely. git push dont share it normaly
+ git push origin --tags // to push all of your tags to the server.
+ 
+ git checkout -b version2 v2.0.0 // Switched to a new branch 'version2', in case if you want to fix a bug in an old version.
+
+ //Set up alias name for your git commands, its pretty much recommended
+ * git config --global alias.co checkout
+ * git config --global alias.br branch
+ * git config --global alias.ci commit
+ * git config --global alias.st status
+ * git config --global alias.unstage 'reset HEAD --'
+ * git config --global alias.last 'log -1 HEAD'
+ * Instructions: insted uf using git commit use git ci
+ //end
