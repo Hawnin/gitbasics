@@ -52,3 +52,10 @@ git remote add <shortname> <url> // add  aremote repository, and a shortname for
  * git config --global alias.last 'log -1 HEAD'
  * Instructions: insted uf using git commit use git ci
  //end
+ 
+ //Branch
+ git branch testing // create a branch called testing
+ git log // shows the branch and the previous commits
+ git log --oneline --decorate // for showing the most recent modification and one line with branch.
+ git checkout testing // move the HEAD pointer to the new branch.
+ git checkout -b iss53 // Create and switch to the new branch.
