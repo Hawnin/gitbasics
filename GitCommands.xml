@@ -52,3 +52,12 @@ git remote add <shortname> <url> // add  aremote repository, and a shortname for
  * git config --global alias.last 'log -1 HEAD'
  * Instructions: insted uf using git commit use git ci
  //end
+ 
+ // Branch
+ git branch iss53 // create a branch iss53
+ git checkout iss53 // change to iss53 branch 
+ git checkout -b hotfix // create the hotfix branch and switch to it
+ git merge hotfix // merge the current branch with the hotfix branch
+ git branch -d hotfix // delet a branch
+ 
+ 
