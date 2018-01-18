@@ -53,6 +53,7 @@ git remote add <shortname> <url> // add  aremote repository, and a shortname for
  * Instructions: insted uf using git commit use git ci
  //end
  
+<<<<<<< HEAD
  // Branch
  git branch iss53 // create a branch iss53
  git checkout iss53 // change to iss53 branch 
@@ -61,3 +62,11 @@ git remote add <shortname> <url> // add  aremote repository, and a shortname for
  git branch -d hotfix // delet a branch
  
  
+=======
+ //Branch
+ git branch testing // create a branch called testing
+ git log // shows the branch and the previous commits
+ git log --oneline --decorate // for showing the most recent modification and one line with branch.
+ git checkout testing // move the HEAD pointer to the new branch.
+ git checkout -b iss53 // Create and switch to the new branch.
+>>>>>>> iss53
