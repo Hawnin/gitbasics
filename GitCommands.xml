@@ -138,6 +138,131 @@
   - Typically a hyphen or asterisk is used for the bullet,
     preceded by a single space, with blank lines in
     between, but conventions vary here
+ 
+ git request-pull origin/master myfork // it gives you details where the work was branched from, summarizes the commits and identifies from they were pulled from.
+
+ *********************		PATCH		************************
+ 
+ git format-patch -M origin/master // Create a patch
+ git diff // generate patch
+ git apply /tmp/patch-ruby-client.patch // Apply patch which you recieved
+ git apply --check <patch path/name> // see if the patch applies cleanly before you try actually applying it.
+ git am // if the patch was generated with format-patch
+ git am -3 <patch path/name> // if fails then it try to solve it with 3 way merge
+ git am -3 -i mbox // look for all the patches and ask if you want to apply it
+ git cherry-pick e43a6 // Cherry pick the e43a6 commit to your current branch.
+ 
+ *********************		DIFF		************************
+ git merge-base contrib master 
+ git diff 36c7db // this two command is searching for the common ancestor then running difference on it (master branch might move forward in time thats why its neccessarry to see the correct log)
+ git diff $(git merge-base contrib master) // Same as above just in one command.
+ git diff master...contrib // Same as above, more convenient
+ git config --global rerere.enabled true // this command allows git to automatically fix conflict which you have fixed before.
+ 
+ *********************		TAG		************************
+ //Tagging your last release in order to re create it anytime later.
+ git tag -s v1.5 -m 'my signed 1.5 tag' // Release flags created with -s or -a 
+ gpg --list-keys //show the secret keys
+ gpg -a --export F721C45A | git hash-object -w --stdin //Import the Secret key and make a new blob into git which gives you back a HASH1
+ git tag -a maintainer-pgp-pub <HASH CODE> //make a tag which points to the hash
+ git show maintainer-pgp-pub | gpg --import // 
+ 
+ ********************	SECRET KEY	***********************
+ gpg --gen-key //to generate a secret key
+ 
+ ********************	Release		*********************** 
+ git archive master --prefix='Releasev1.5' --format=zip > `git describe master`.zip // creates a zip from your release
+ 
+ ********************	GITLOG	************************
+ git log // shows all the commits
+ git show <HASH first 4 character> // this shows what happened in that commit
+ git log --abbrev-commit --pretty=oneline  //show commits in one row
+ git rev-parse <branch> // shows the last commits SHA1
+ git reflog //showw all the reference where your HEAD pointer have been.
+ git show HEAD@{5} // shows the 5th log from bottom
+ git show master@{yesterday} // shows where your master branch were yesterday
+ git log -g //  reflog in formatted output like git log
+ git log --pretty=format:'%h %s' --graph //show log in graph mode.
+ git show HEAD^ // shows HEAD's parent
+ git show HEAD^2 // shows the HEAD's 2nd parent
+ git show HEAD~3 // shows the HEAD's Parent of Parent
+ git log master..experiment // shows whats in Experiment Branch which is not yet in Master branch
+ git log origin/master..HEAD // shows whats in HEAD which is not yet in Remote Repository.
+ git log featureAv2 featureBv2 --not master // shows whats master which is not in featureBv2 and featureAv2
+ git log master...experiment  // shows all the commits which reachable by master or by experiment branch but not yet in both.
+ 
+ ********************	GitHub		*********************** 
+ git fetch origin refs/pull/958/head // it downloads the forks, basically somone pulled your project then made some modification, You want to donwload their modifications then you need to pull them 
+ //also can modify config file to keep up-to-date all of your fetched pull req
+ *[remote "origin"]
+ *    url = https://github.com/libgit2/libgit2.git
+ *    fetch = +refs/heads/*:refs/remotes/origin/*
+ *    fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+ *//Last line tells git to fetch all the data from that remote branch, all you need after this is git fetch.
+ 
+ ********************	Commit, Staging, Statsh		*********************** 
+ git add -i //Helps you to separate, and choose files which you want to include in a commit, (the logic behinde it is smaller commits which is not that messy as a big commit)
+ // 5 option type ? to see the options
+ git stash // save the modifications you made so you will able to change to different branch
+ git stash list // list your stash
+ git stash apply stash@{2} // to apply stash number 2
+ git stash apply // to apply the most recent stash
+ git stash apply --index  // to try to re apply the staged changes 
+ git stash drop // to drop the most recent stash
+ git stash pop // to re apply your stash then immediately drop it.
+ git stash --keep-index // save the staged file and leave it in the index file as well.
+ git stash -u  // to save everything, including untracked files.
+ git stash --patch // prompt you which of the changes you want to keep in your working directory
+ git stash branch <branch>  // will creat a branch from your stash, usefull if you want to try safely your old changes on a file which you modified since.
+							// most recent stash will be created as a branch, stash will be dropped
+ 
+ ********************	Remove	***********************
+ git clean // to remove files in your directory which untracked and not ingored.
+ git stash --all //to remove everything but store them in a stash
+ git clean -d -n // will tell you what it would remove
+ git clean -n -d -x // remove files which generated by the build -x  
+ git clean -x -i // run it in interactive mode.
+ 
+ ********************	Sign your work	***********************
+ gpg --gen-key // generate a key for yourself
+ git config --global user.signingkey 0A46826A // make git to use your key for signing
+ git tag -s v1.5 -m 'my signed 1.5 tag' // -s to sign your work
+ git show v1.5 // to check your signature
+ git tag -v <tag-name> // to verify the tag
+ git commit -a -S -m 'signed commit' // -S to sign your commit
+ git log --show-signature -1 // to check the signed commit
+ git log --pretty="format:%h %G? %aN  %s" // to check any signatures
+ git merge --verify-signatures non-verify // git check if commits have trusted GPG signature, if not rejects.
+ git merge --verify-signatures -S  signed-branch // Verifies if the commits in the branch are signed and after merge it will sign the merge commit as well.
+
+ ********************	Search	***********************
+ git grep -n gmtime_r // with -n it will print out the lines where git found matches.
+ git grep --count gmtime_r // show you the files and how many items are found
+ git grep -p gmtime_r *.c  // to show you the context of the searching
+ git grep --break --heading \     -n -e '#define' --and \( -e LINK -e BUF_MAX \) v1.8.0 // with and you can add more criteria to search, --break --heading will format it into readable format
+ git log -S feature --oneline // will give you the resoult of a log where the feature has been added.
+ git diff <HASH1><HASH1> // to see the diff between the 2 change which was found 
+ git log -L :git_deflate_bound:zlib.c // to check all the changes made to function <git_deflate_bound> in  <zlib.c>
+ 
+ ********************	Modify Log	***********************
+ git commit --amend // change the last commit comments
+ git commit --amend // you can change the content of your commit, by simply modifying the files before using the command, dont use it if commit have been pushed.
+ git commit --amend --no-edit // to only amend the missing files or modifications, no commet change
+ git rebase -i HEAD~3 // will rebase the last 3 commit, in the editor change PICK to EDIT in order to change the commit
+ 
+
+ 
+
 
  
  
+ 
+ //review again
+ Generation of TAGS
+ Generation of Build Number
+ Setting up Webhook
+ 
+ Sterling Configuration Deployment Tool.
+ 
+ 
+ page 200

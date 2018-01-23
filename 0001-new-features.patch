@@ -1,0 +1,20 @@
+From 0b5b4b2f8e033b3920ba2279998d3d56e5381589 Mon Sep 17 00:00:00 2001
+From: hawnin <jmprs@freemail.hu>
+Date: Fri, 19 Jan 2018 14:03:47 +0200
+Subject: [PATCH] new features
+
+---
+ featureA.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 featureA.txt
+
+diff --git a/featureA.txt b/featureA.txt
+new file mode 100644
+index 0000000..f3b59f2
+--- /dev/null
++++ b/featureA.txt
+@@ -0,0 +1 @@
++more feature added
+-- 
+2.15.1.windows.2
+
