@@ -342,6 +342,12 @@
  git bundle verify ../commits.bundle // verify if the bundle is a valid commit bundle
  
  
+ *******************		History		*******************
+ git branch history 727d7d6 
+ git replace 81a708d c6e1e95 // to replce history
+ 
+ 
+ 
  //review again
  Generation of TAGS
  Generation of Build Number
@@ -350,6 +356,4 @@
  Sterling Configuration Deployment Tool.
  
  
- page 300
- 
- 
+ page 311
