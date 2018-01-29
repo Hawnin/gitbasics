@@ -249,12 +249,97 @@
  git commit --amend // you can change the content of your commit, by simply modifying the files before using the command, dont use it if commit have been pushed.
  git commit --amend --no-edit // to only amend the missing files or modifications, no commet change
  git rebase -i HEAD~3 // will rebase the last 3 commit, in the editor change PICK to EDIT in order to change the commit
+ git rebase -i HEAD~3 // if you delet a row from the text editor that will resoult a full commit removal.
+ git rebase -i HEAD~3 // if you change 2/3 lines PICK to SQUASH it will merge the commits into the 1/3 which remained at PICK
+ git log --pretty=format:"%h %s" HEAD~3..HEAD // to check the modified log, Note: Order is changed
  
-
+ git filter-branch --subdirectory-filter trunk HEAD // make a subdirectory to a new root, git automatically remove commits that did not affect the subdirectory
  
-
-
+ * git filter-branch --commit-filter '
+ *        if [ "$GIT_AUTHOR_EMAIL" = "schacon@localhost" ];
+ *        then
+ *                GIT_AUTHOR_NAME="Scott Chacon";
+ *                GIT_AUTHOR_EMAIL="schacon@example.com";
+ *                git commit-tree "$@";
+ *        else
+ *                git commit-tree "$@";
+ *        fi' HEAD
+ **//to rewrite every commits email address.
+ git cat-file -p HEAD //list checksum for the file in HEAD snapshot
+ git ls-tree -r HEAD //list the files in the directury wiht SHA1 chekcsum.
+ git ls-files -s //show you how your index now looks like.
  
+ ********************	Modify Head,Index,WorkingDirectory	***********************
+ git reset <HSA-1> //moves what HEAD points to basically.
+ git reset HEAD~ // basically undo git commit. move to Parent of HEAD
+ git reset --soft HEAD~ // simply move the head file to one place behind and after running commit the history will be no longer available on the branch.
+ 
+ 
+ *********************		Advanced Merging		************************
+ git merge --abort // abort merging when merge conflict happens
+ git reset --hard HEAD // your repository will be back to your last committed stage
+ 
+ git ls-files -u // to get SHA-1 codes
+ git diff --ours // to see what the difference was before introducing the modifications.
+ git diff --theirs // to see what the difference on the new modifications compared to your master branch now.
+ git diff --base // to see how the files changes from both side 
+ git log --graph --oneline --decorate --all // to check the whole branch
+ git checkout --conflict=diff3 file.txt // checkout the conflict if we want to get more context on the issue
+ git config --global merge.conflictstyle diff3 // to set-up as default
+ git log --oneline --left-right HEAD...MERGE_HEAD  // to check the log what was introduced to resolve the conflict
+ git log --oneline --left-right --merge // to check logs on conflict.
+  
+ *********************		Undo Merges		************************
+ Onkly-Locally
+ git reset --hard HEAD~ // after git merge it will undo the change.
+ git revert -m 1 HEAD // will revert the merging.
+ git merge -Xours / -Xtheirs file.txt // will automatically merge even if there is a conflict since we specify which modification we want to merge
+ 
+ ********************		Rerere		***************************
+ git config --global rerere.enabled true // To enable rerere , basically will remember how you resolved a conflict.
+ git rerere status // will tell you what has been recorded
+ git rerere diff //show you the state of resolution and what you started with to resolve and what you have resolved it to.
+ git ls-files -u
+ 
+ ********************		Debugging		************************ //might be automated!!!!!!!!!!!!!!!!!!
+ git blame -L 69,82 Makefile // show the 69-82 lines from Makefile linux kernel file.
+ git blame -C -L 141,153 GITPackUpload.m // will check where the codes are originally came from.
+ ** Binary Debug **
+ git bisect start //To tell up bisect
+ git bisect bad //To tell Bisect the current commit is bad
+ git bisect <good_commit> // To tell bisect which commit was good and finely working before
+ git bisect good // Bisect will check middle commit, you will try out if the problem existed there, if not state bisect good to continnue.
+ git bisect reset // To tell bisect to reset HEAD to the commit where you were before.
+ 
+ *******************		Submodules		*******************
+ git submodule add https://github.com/chaconinc/DbConnector
+ git diff --cached --submodule
+ **Cloning**
+ git clone https://github.com/chaconinc/MainProject // Cloning a project with sub modules, directory will be created but it will be empty
+ git submodule init // to initialize the local configuration file
+ git submodule update // to fecth all the data from the project
+ git clone --recurse-submodules https://github.com/chaconinc/MainProject // will automatically update all submodules.
+ git submodule update --remote // trying to update the specified submodule 
+ git submodule update --remote --merge //immediately merges the change into your local stable version from github
+ git submodule update --remote --rebase // if you dont use rebase or merge it will just update the submodule and reset your project header.
+ git config push.recurseSubmodules on-demand // This set-up will make push command fail if submodule cannot be pushed to project
+ **Tips**
+ git submodule foreach 'git stash' // it will stash all of our changes in all of our submodules.
+ git submodule foreach 'git checkout -b featureA' // create a feratureA branch in every of our submodule.
+ **Config Aliases**
+ git config alias.sdiff '!'"git diff && git submodule foreach 'git diff'" 
+ git config alias.spush 'push --recurse-submodules=on-demand' 
+ git config alias.supdate 'submodule update --remote --merge'
+ submodule update --init // if you remove submodule from master (untracked) then you check back to the branch you should re populate it.
+ **Moving Sub directory into Submodule**
+ rm -Rf CryptoLibrary/ //before remove you have to unstage it first othewise you wont be able to add it to the submodule
+ git submodule add https://github.com/chaconinc/CryptoLibrary //add the library to submodule
+ 
+ *******************		Bundle		*******************
+ git bundle // to put your files into binary format and you will able to put them on HDD to give to others
+ git bundle create repo.bundle HEAD master //
+ git bundle create commits.bundle master ^9a466c5 // create a bundle from the commit Hash above commits
+ git bundle verify ../commits.bundle // verify if the bundle is a valid commit bundle
  
  
  //review again
@@ -265,4 +350,6 @@
  Sterling Configuration Deployment Tool.
  
  
- page 200
+ page 300
+ 
+ 
